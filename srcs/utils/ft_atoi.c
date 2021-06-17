@@ -1,31 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstclear.c                                      :+:      :+:    :+:   */
+/*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rotrojan <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/10/20 14:32:34 by rotrojan          #+#    #+#             */
-/*   Updated: 2021/03/16 15:26:13 by rotrojan         ###   ########.fr       */
+/*   Created: 2019/10/08 17:51:21 by rotrojan          #+#    #+#             */
+/*   Updated: 2021/06/17 21:03:11 by rotrojan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "minitalk.h"
 
-void	ft_lstclear(t_list **lst, void (*del)(void*))
+int	ft_atoi(char const *str)
 {
-	t_list		*tmp;
-	t_list		*next_link;
+	int		result;
+	char	is_negative;
 
-	if (*lst && del)
-	{
-		tmp = *lst;
-		while (tmp)
-		{
-			next_link = tmp->next;
-			ft_lstdelone(tmp, del);
-			tmp = next_link;
-		}
-		*lst = NULL;
-	}
+	while ((*str >= 9 && *str <= 13) || *str == 32)
+		str++;
+	if (*str == '-')
+		is_negative = -1;
+	else
+		is_negative = 1;
+	if (*str == '-' || *str == '+')
+		str++;
+	result = 0;
+	while (*str >= '0' && *str <= '9' && *str)
+		result = result * 10 + *(str++) - '0';
+	return (result * is_negative);
 }

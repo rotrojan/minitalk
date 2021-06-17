@@ -1,23 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstdelone.c                                     :+:      :+:    :+:   */
+/*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rotrojan <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/10/20 10:53:29 by rotrojan          #+#    #+#             */
-/*   Updated: 2020/02/23 16:28:09 by rotrojan         ###   ########.fr       */
+/*   Created: 2019/10/07 14:39:57 by rotrojan          #+#    #+#             */
+/*   Updated: 2021/06/17 21:39:14 by rotrojan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "minitalk.h"
 
-void	ft_lstdelone(t_list *lst, void (*del)(void*))
+static size_t	ft_strlen(char const *str)
 {
-	if (lst && del)
-	{
-		del(lst->content);
-		free(lst);
-		lst = NULL;
-	}
+	size_t	size;
+
+	size = 0;
+	while (str[size])
+		++size;
+	return (size);
+}
+
+void	ft_putstr_fd(char const *str, int fd)
+{
+	write(fd, str, ft_strlen(str));
 }

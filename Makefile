@@ -6,74 +6,62 @@
 #    By: rotrojan <rotrojan@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/05/18 14:51:42 by rotrojan          #+#    #+#              #
-#    Updated: 2021/06/17 01:04:26 by bigo             ###   ########.fr        #
+#    Updated: 2021/06/17 21:37:49 by rotrojan         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = $(CLIENT) $(SERVER)
+NAME = minitalk
 
-CLIENT = client
-SERVER = server
+CLIENT_NAME = client
+SERVER_NAME = server
 
-SRCS_CLIENT =	main_client.c
-SRCS_SERVER =	main_server.c
-SRCS = $(SRCS_CLIENT) $(SRCS_SERVER)
-OBJS = $(SRCS:%.c=$(OBJS_DIR)/%.o)
-DEPENDENCIES = $(OBJS:%.o=%.d)
+CLIENT_SRCS = client.c
+CLIENT_OBJS = $(CLIENT_SRCS:%.c=$(OBJS_DIR)/%.o)
+
+SERVER_SRCS = server.c
+SERVER_OBJS = $(SERVER_SRCS:%.c=$(OBJS_DIR)/%.o)
+
+UTILS_SRCS = ft_atoi.c ft_isdigit.c ft_putnbr_fd.c ft_putstr_fd.c
+UTILS_OBJS = $(UTILS_SRCS:%.c=$(OBJS_DIR)/%.o)
 
 SRCS_DIR = srcs
 OBJS_DIR = .objs
-INCLUDES_DIR = includes $(LIBS:%=lib%/includes)
 
-LIBS = gc ft
+DEP = $(CLIENT_OBJS:%.o=%.d) $(SERVER_OBJS:%.o=%.d) $(UTILS_OBJS:%.o=%.d)
 
-MAKE = make
 CC = clang
 RM = rm -f
 MKDIR = mkdir -p
-DEBUG = off
 
-CFLAGS = -MMD -Wall -Wextra $(INCLUDES_DIR:%=-I %) #-Werror
-ifeq ($(DEBUG), on)
-	CFLAGS += -g3 -fsanitize=address
-endif
-LDFLAGS = $(LIBS:%=-L lib%) $(LIBS:%=-l%) -lncurses
+CFLAGS = -Wall -Wextra -Werror -MMD -I includes/
 
-vpath %.c	$(addprefix $(SRCS_DIR), /. /client /server)
+vpath %.c srcs/utils srcs
 
-all:
-	$(foreach LIB, ${LIBS}, ${MAKE} -C lib${LIB} ;)
-	$(MAKE) $(NAME)
+all: $(NAME)
 
-$(NAME): $(CLIENT) $(SERVER)
+$(NAME):
+	$(MAKE) $(SERVER_NAME)
+	$(MAKE) $(CLIENT_NAME)
 
-$(CLIENT): $(OBJS) | $(LIBS:%=lib%.a)
-	$(CC) $^ -o $(CLIENT) $(LDFLAGS)
+$(SERVER_NAME): $(SERVER_OBJS) $(UTILS_OBJS)
+	$(CC) $^ -o $(SERVER_NAME)
 
-$(SERVER): $(OBJS) | $(LIBS:%=lib%.a)
-	$(CC) $^ -o $(SERVER) $(LDFLAGS)
+$(CLIENT_NAME): $(CLIENT_OBJS) $(UTILS_OBJS)
+	$(CC) $^ -o $(CLIENT_NAME)
 
--include $(DEPENDENCIES)
-$(OBJS_DIR)/%.o: %.c $(OBJS_DIR)/debug$(DEBUG) | $(OBJS_DIR) 
+-include $(DEP)
+$(OBJS_DIR)/%.o: %.c | $(OBJS_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(OBJS_DIR):
-	$(MKDIR) $(OBJS_DIR)
-
-lib%.a:
-	$(MAKE) -C $(@:%.a=%)
-
-$(OBJS_DIR)/debug$(DEBUG): | $(OBJS_DIR)
-	$(RM) $(OBJS_DIR)/debug*
-	touch $@
+	$(MKDIR) $@
 
 clean:
-	$(foreach LIB, $(LIBS), $(MAKE) $@ -C lib$(LIB);)
 	$(RM) -r $(OBJS_DIR)
 
 fclean: clean
-	$(RM) $(NAME) $(foreach LIB, $(LIBS), lib$(LIB)/lib$(LIB).a)
+	$(RM) $(SERVER_NAME) $(CLIENT_NAME)
 
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: $(NAME) all clean fclean re

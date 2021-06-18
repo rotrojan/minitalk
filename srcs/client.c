@@ -6,27 +6,27 @@
 /*   By: rotrojan <rotrojan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/16 13:48:50 by rotrojan          #+#    #+#             */
-/*   Updated: 2021/06/18 03:01:39 by bigo             ###   ########.fr       */
+/*   Updated: 2021/06/18 03:15:06 by bigo             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 #define MAX_LEN_PID_STR 7
 
-void	exit_error(char const *error_msg)
+static void	exit_error(char const *error_msg)
 {
 	ft_putstr_fd("Error: ", STDERR_FILENO);
 	ft_putstr_fd(error_msg, STDERR_FILENO);
 	exit(EXIT_FAILURE);
 }
 
-t_bool	check_errors(int ac, char **av, pid_t pid)
+static t_bool	check_errors(int ac, char **av)
 {
 	int	i;
 
 	if (ac != 3)
 		return (FALSE);
-	if (pid < 1 || ft_strlen(av[1]) > MAX_LEN_PID_STR)
+	if (ft_atoi(av[1]) < 1 || ft_strlen(av[1]) > MAX_LEN_PID_STR)
 	{
 		ft_putstr_fd("Error: invalid PID\n", STDERR_FILENO);
 		return (FALSE);
@@ -44,7 +44,7 @@ t_bool	check_errors(int ac, char **av, pid_t pid)
 	return (TRUE);
 }
 
-void	send_byte(int server_pid, char byte)
+static void	send_byte(int server_pid, char byte)
 {
 	unsigned char	mask;
 	unsigned char	bit;
@@ -69,7 +69,7 @@ void	send_byte(int server_pid, char byte)
 	}
 }
 
-void	send_str(int server_pid, const char *str)
+static void	send_str(int server_pid, const char *str)
 {
 	char	*ptr;
 
@@ -86,8 +86,7 @@ int	main(int ac, char **av)
 {
 	pid_t	pid;
 
-	pid = (pid_t)ft_atoi(av[1]);
-	if (check_errors(ac, av, pid) == FALSE)
+	if (check_errors(ac, av) == FALSE)
 	{
 		ft_putstr_fd("Usage:   ./client <server_pid> <message>\n",
 			STDERR_FILENO);
@@ -95,6 +94,7 @@ int	main(int ac, char **av)
 			STDERR_FILENO);
 		return (EXIT_FAILURE);
 	}
+	pid = (pid_t)ft_atoi(av[1]);
 	send_str(pid, av[2]);
 	return (EXIT_SUCCESS);
 }

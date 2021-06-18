@@ -6,13 +6,13 @@
 /*   By: rotrojan <rotrojan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/16 13:48:50 by rotrojan          #+#    #+#             */
-/*   Updated: 2021/06/17 21:01:28 by rotrojan         ###   ########.fr       */
+/*   Updated: 2021/06/18 02:53:31 by bigo             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
-void	handler(int signal_num)
+static void	handler(int signal_num)
 {
 	static unsigned char	mask = 0b10000000;
 	static unsigned char	byte = 0;
@@ -25,7 +25,7 @@ void	handler(int signal_num)
 		if (byte != '\0')
 			write(STDOUT_FILENO, &byte, 1);
 		else
-			ft_putstr_fd("\nString received.\n", STDOUT_FILENO);
+			ft_putstr_fd("\nMessage received\n", STDOUT_FILENO);
 		mask = 0b10000000;
 		byte = 0;
 	}

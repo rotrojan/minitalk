@@ -6,7 +6,7 @@
 /*   By: bigo <rotrojan@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/16 13:51:06 by rotrojan          #+#    #+#             */
-/*   Updated: 2021/06/18 02:33:15 by bigo             ###   ########.fr       */
+/*   Updated: 2021/06/23 20:28:32 by rotrojan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,5 +28,7 @@ void	ft_putnbr_fd(int n, int fd);
 void	ft_putstr_fd(char const *s, int fd);
 void	ft_putchar_fd(char c, int fd);
 size_t	ft_strlen(char const *str);
+void	ft_bzero(void *b, size_t n);
+void	*ft_memset(void *b, int c, size_t len);
 
 #endif

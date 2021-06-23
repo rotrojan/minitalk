@@ -6,7 +6,7 @@
 #    By: rotrojan <rotrojan@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/05/18 14:51:42 by rotrojan          #+#    #+#              #
-#    Updated: 2021/06/18 02:37:49 by bigo             ###   ########.fr        #
+#    Updated: 2021/06/23 20:28:51 by rotrojan         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,7 @@ SERVER_SRCS = server.c
 SERVER_OBJS = $(SERVER_SRCS:%.c=$(OBJS_DIR)/%.o)
 
 UTILS_SRCS = ft_atoi.c ft_isdigit.c ft_putnbr_fd.c ft_putstr_fd.c \
-			ft_strlen.c ft_putchar_fd.c
+			ft_strlen.c ft_putchar_fd.c ft_bzero.c ft_memset.c
 UTILS_OBJS = $(UTILS_SRCS:%.c=$(OBJS_DIR)/%.o)
 
 SRCS_DIR = srcs

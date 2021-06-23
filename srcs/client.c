@@ -6,7 +6,7 @@
 /*   By: rotrojan <rotrojan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/16 13:48:50 by rotrojan          #+#    #+#             */
-/*   Updated: 2021/06/18 03:15:06 by bigo             ###   ########.fr       */
+/*   Updated: 2021/06/23 20:31:03 by rotrojan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ static void	send_byte(int server_pid, char byte)
 			if (kill(server_pid, SIGUSR2) == -1)
 				exit_error("signal not sent\n");
 		}
-		usleep(10);
+		usleep(20);
 		mask = mask >> 1;
 	}
 }

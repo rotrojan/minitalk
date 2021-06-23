@@ -6,7 +6,7 @@
 /*   By: rotrojan <rotrojan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/16 13:48:50 by rotrojan          #+#    #+#             */
-/*   Updated: 2021/06/18 02:53:31 by bigo             ###   ########.fr       */
+/*   Updated: 2021/06/23 20:25:20 by rotrojan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,13 @@ static void	handler(int signal_num)
 
 int	main(int ac, char **av)
 {
+	struct sigaction	sa;
+
 	(void)av;
-	signal(SIGUSR1, handler);
-	signal(SIGUSR2, handler);
+	ft_bzero(&sa, sizeof(sa));
+	sa.sa_handler = &handler;
+	sigaction(SIGUSR1, &sa, NULL);
+	sigaction(SIGUSR2, &sa, NULL);
 	if (ac != 1)
 	{
 		ft_putstr_fd("Usage: ./server\n", STDERR_FILENO);

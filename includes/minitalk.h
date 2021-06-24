@@ -6,7 +6,7 @@
 /*   By: bigo <rotrojan@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/16 13:51:06 by rotrojan          #+#    #+#             */
-/*   Updated: 2021/06/23 20:28:32 by rotrojan         ###   ########.fr       */
+/*   Updated: 2021/06/24 15:36:19 by rotrojan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,5 +30,6 @@ void	ft_putchar_fd(char c, int fd);
 size_t	ft_strlen(char const *str);
 void	ft_bzero(void *b, size_t n);
 void	*ft_memset(void *b, int c, size_t len);
+void	exit_error(char const *error_msg);
 
 #endif

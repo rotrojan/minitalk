@@ -6,17 +6,18 @@
 /*   By: rotrojan <rotrojan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/16 13:48:50 by rotrojan          #+#    #+#             */
-/*   Updated: 2021/06/23 20:25:20 by rotrojan         ###   ########.fr       */
+/*   Updated: 2021/06/24 15:56:11 by rotrojan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
-static void	handler(int signal_num)
+static void	handler(int signal_num, siginfo_t *info, void *context)
 {
 	static unsigned char	mask = 0b10000000;
 	static unsigned char	byte = 0;
 
+	(void)context;
 	if (signal_num == SIGUSR1)
 		byte += mask;
 	mask = mask >> 1;
@@ -25,7 +26,11 @@ static void	handler(int signal_num)
 		if (byte != '\0')
 			write(STDOUT_FILENO, &byte, 1);
 		else
+		{
 			ft_putstr_fd("\nMessage received\n", STDOUT_FILENO);
+			if (kill(info->si_pid, SIGUSR1) == -1)
+				exit_error("Reception acknowledgment not sent\n");
+		}
 		mask = 0b10000000;
 		byte = 0;
 	}
@@ -37,7 +42,8 @@ int	main(int ac, char **av)
 
 	(void)av;
 	ft_bzero(&sa, sizeof(sa));
-	sa.sa_handler = &handler;
+	sa.sa_sigaction = &handler;
+	sa.sa_flags = SA_SIGINFO;
 	sigaction(SIGUSR1, &sa, NULL);
 	sigaction(SIGUSR2, &sa, NULL);
 	if (ac != 1)

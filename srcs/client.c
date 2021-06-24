@@ -6,18 +6,21 @@
 /*   By: rotrojan <rotrojan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/16 13:48:50 by rotrojan          #+#    #+#             */
-/*   Updated: 2021/06/23 20:31:03 by rotrojan         ###   ########.fr       */
+/*   Updated: 2021/06/24 16:05:01 by rotrojan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 #define MAX_LEN_PID_STR 7
 
-static void	exit_error(char const *error_msg)
+static void	handler(int signal_num, siginfo_t *info, void *context)
 {
-	ft_putstr_fd("Error: ", STDERR_FILENO);
-	ft_putstr_fd(error_msg, STDERR_FILENO);
-	exit(EXIT_FAILURE);
+	(void)signal_num;
+	(void)context;
+	ft_putstr_fd("Message received and displayed by server ", STDOUT_FILENO);
+	ft_putnbr_fd(info->si_pid, STDOUT_FILENO);
+	ft_putstr_fd("\n", STDOUT_FILENO);
+	exit(EXIT_SUCCESS);
 }
 
 static t_bool	check_errors(int ac, char **av)
@@ -64,7 +67,7 @@ static void	send_byte(int server_pid, char byte)
 			if (kill(server_pid, SIGUSR2) == -1)
 				exit_error("signal not sent\n");
 		}
-		usleep(20);
+		usleep(100);
 		mask = mask >> 1;
 	}
 }
@@ -84,8 +87,14 @@ static void	send_str(int server_pid, const char *str)
 
 int	main(int ac, char **av)
 {
-	pid_t	pid;
+	pid_t				pid;
+	struct sigaction	sa;
 
+	ft_bzero(&sa, sizeof(sa));
+	sa.sa_sigaction = &handler;
+	sa.sa_flags = SA_SIGINFO;
+	sigaction(SIGUSR1, &sa, NULL);
+	ft_bzero(&sa, sizeof(sa));
 	if (check_errors(ac, av) == FALSE)
 	{
 		ft_putstr_fd("Usage:   ./client <server_pid> <message>\n",
@@ -96,5 +105,8 @@ int	main(int ac, char **av)
 	}
 	pid = (pid_t)ft_atoi(av[1]);
 	send_str(pid, av[2]);
-	return (EXIT_SUCCESS);
+	ft_putstr_fd("Waiting for reception acknowledgment ...\n", STDOUT_FILENO);
+	sleep(3);
+	ft_putstr_fd("Reception acknowledgment not received\n", STDERR_FILENO);
+	return (EXIT_FAILURE);
 }

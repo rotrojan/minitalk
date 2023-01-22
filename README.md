@@ -1,5 +1,5 @@
 # minitalk
-The purpose of this project is to code a small data exchange program using UNIX signals.
+The purpose of this 42 project is to code a small data exchange program using UNIX signals.
 
 ## Usage
 Compile with `make`.
